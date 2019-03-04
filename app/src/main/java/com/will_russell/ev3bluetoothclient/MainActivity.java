@@ -36,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
         TextInputEditText ipText = (TextInputEditText) findViewById(R.id.ip_box);
         TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
-        getData(ipText.getText(), Integer.valueOf(portText.getText()));
+        try {
+            getData(ipText.getText().toString(), Integer.valueOf(portText.getText().toString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
