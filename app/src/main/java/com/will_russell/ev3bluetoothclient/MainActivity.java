@@ -27,26 +27,26 @@ public class MainActivity extends AppCompatActivity {
         builder = new AlertDialog.Builder(this);
     }
 
-    private void getData(String ip, int port) throws IOException {
-        Socket socket = new Socket(ip, port);
-        InputStream in = socket.getInputStream();
-        DataInputStream dataIn = new DataInputStream(in);
-        String output = dataIn.readUTF();
-        TextView tv = new TextView(this);
-        tv.setText(output);
-        listview.addView(tv);
-    }
-
     public void onClick(View v) {
-        TextInputEditText ipText = (TextInputEditText) findViewById(R.id.ip_box);
-        TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
+        final TextInputEditText ipText = (TextInputEditText) findViewById(R.id.ip_box);
+        final TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
         if (ipText.getText().toString().trim().length() <= 0) {
-            builder.setMessage("You need to enter an IP address");
+            builder.setMessage("You need to enter an IP address").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    ipText.setFocusableInTouchMode(true);
+                    ipText.requestFocus();
+                }
+            });;
             AlertDialog alert = builder.create();
             alert.setTitle("No IP Address");
             alert.show();
         } else if (portText.getText().toString().trim().length() <= 0) {
-            builder.setMessage("You need to enter a Port number");
+            builder.setMessage("You need to enter a Port number").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    portText.setFocusableInTouchMode(true);
+                    portText.requestFocus();
+                }
+            });;;
             AlertDialog alert = builder.create();
             alert.setTitle("No Port Number");
             alert.show();
@@ -62,5 +62,15 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void getData(String ip, int port) throws IOException {
+        Socket socket = new Socket(ip, port);
+        InputStream in = socket.getInputStream();
+        DataInputStream dataIn = new DataInputStream(in);
+        String output = dataIn.readUTF();
+        TextView tv = new TextView(this);
+        tv.setText(output);
+        listview.addView(tv);
     }
 }
