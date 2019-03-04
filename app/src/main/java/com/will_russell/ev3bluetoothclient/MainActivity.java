@@ -40,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View v) {
         TextInputEditText ipText = (TextInputEditText) findViewById(R.id.ip_box);
         TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
-        if (ipText.getText().toString().trim().length() > 0) {
+        if (ipText.getText().toString().trim().length() <= 0) {
             builder.setMessage("You need to enter an IP address");
             AlertDialog alert = builder.create();
             alert.setTitle("No IP Address");
             alert.show();
-        } else if (portText.getText().toString().trim().length() > 0) {
+        } else if (portText.getText().toString().trim().length() <= 0) {
             builder.setMessage("You need to enter a Port number");
             AlertDialog alert = builder.create();
             alert.setTitle("No Port Number");
