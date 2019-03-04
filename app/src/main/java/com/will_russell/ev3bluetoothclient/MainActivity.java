@@ -1,6 +1,6 @@
 package com.will_russell.ev3bluetoothclient;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
@@ -12,6 +12,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setup() {
-        
+
     }
 }
