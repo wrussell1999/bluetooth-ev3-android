@@ -9,7 +9,6 @@ import android.os.StrictMode;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -20,7 +19,6 @@ import java.net.*;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
     private ListView listview;
     private ArrayList<String> outputList = new ArrayList<>();
     ArrayAdapter<String> adapter;
@@ -67,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                 alert.setTitle("No Port Number");
                 alert.show();
             } else {
-
                 connectButton.setText("Disconnect");
                 startConnection(ipText.getText().toString().trim(), Integer.valueOf(portText.getText().toString().trim()));
             }
@@ -149,6 +146,5 @@ public class MainActivity extends AppCompatActivity {
             outputList.add(output);
             adapter.notifyDataSetChanged();
         }
-
     }
 }
