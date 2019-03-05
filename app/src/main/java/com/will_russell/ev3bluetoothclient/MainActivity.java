@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         listview = (ListView) findViewById(R.id.output_view);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, outputList);
-
+        listview.setAdapter(adapter);
         updateConversationHandler = new Handler();
         builder = new AlertDialog.Builder(this);
 
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     InputStream in = socket.getInputStream();
                     DataInputStream dataIn = new DataInputStream(in);
                     String output = dataIn.readUTF();
-
+                    updateConversationHandler.post(new OutputThread(output));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -139,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-
+            outputList.add(output);
+            adapter.notifyDataSetChanged();
         }
 
     }
