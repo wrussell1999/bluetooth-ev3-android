@@ -4,54 +4,83 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import android.app.AlertDialog;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView listview;
-    private AlertDialog.Builder builder;
+    private ArrayList<String> outputList = new ArrayList<>();
+    ArrayAdapter<String> adapter;
 
+
+    private AlertDialog.Builder builder;
+    private Socket socket;
+    Handler updateConversationHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         listview = (ListView) findViewById(R.id.output_view);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, outputList);
+
+        updateConversationHandler = new Handler();
         builder = new AlertDialog.Builder(this);
+
+
     }
 
     public void onClick(View v) {
         final TextInputEditText ipText = (TextInputEditText) findViewById(R.id.ip_box);
         final TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
-        if (ipText.getText().toString().trim().length() <= 0) {
-            builder.setMessage("You need to enter an IP address").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    ipText.setFocusableInTouchMode(true);
-                    ipText.requestFocus();
-                }
-            });;
-            AlertDialog alert = builder.create();
-            alert.setTitle("No IP Address");
-            alert.show();
-        } else if (portText.getText().toString().trim().length() <= 0) {
-            builder.setMessage("You need to enter a Port number").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    portText.setFocusableInTouchMode(true);
-                    portText.requestFocus();
-                }
-            });;;
-            AlertDialog alert = builder.create();
-            alert.setTitle("No Port Number");
-            alert.show();
+        MaterialButton connectButton = (MaterialButton) findViewById(R.id.connection_button);
+        if (connectButton.getText().toString().equals("Connect")) {
+            if (ipText.getText().toString().trim().length() <= 0) {
+                builder.setMessage("You need to enter an IP address").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ipText.setFocusableInTouchMode(true);
+                        ipText.requestFocus();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.setTitle("No IP Address");
+                alert.show();
+            } else if (portText.getText().toString().trim().length() <= 0) {
+                builder.setMessage("You need to enter a Port number").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        portText.setFocusableInTouchMode(true);
+                        portText.requestFocus();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.setTitle("No Port Number");
+                alert.show();
+            } else {
+
+                connectButton.setText("Disconnect");
+                startConnection(ipText.getText().toString().trim(), Integer.valueOf(portText.getText().toString().trim()));
+            }
         } else {
-            startConnection(ipText.getText().toString(), Integer.valueOf(portText.getText().toString()));
+            try {
+                endConnection();
+            } catch(IOException e)
+            {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -59,18 +88,59 @@ public class MainActivity extends AppCompatActivity {
     private void startConnection(String ip, int port) {
         try {
             getData(ip, port);
-        } catch (IOException e) {
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void endConnection() throws IOException {
+        socket.close();
+    }
+
     private void getData(String ip, int port) throws IOException {
-        Socket socket = new Socket(ip, port);
-        InputStream in = socket.getInputStream();
-        DataInputStream dataIn = new DataInputStream(in);
-        String output = dataIn.readUTF();
-        TextView tv = new TextView(this);
-        tv.setText(output);
-        listview.addView(tv);
+        socket = new Socket(ip, port);
+        ClientThread clientThread = new ClientThread(socket);
+        new Thread(clientThread).start();
+    }
+
+    class ClientThread implements Runnable {
+        private Socket socket;
+
+        public ClientThread(Socket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        public void run() {
+            while(!Thread.currentThread().isInterrupted()) {
+                try {
+                    InputStream in = socket.getInputStream();
+                    DataInputStream dataIn = new DataInputStream(in);
+                    String output = dataIn.readUTF();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class OutputThread implements Runnable {
+
+        private String output;
+
+        public OutputThread(String output) {
+            this.output = output;
+        }
+
+        @Override
+        public void run() {
+
+        }
+
     }
 }
