@@ -24,26 +24,21 @@ public class MainActivity extends AppCompatActivity {
     private ListView listview;
     private ArrayList<String> outputList = new ArrayList<>();
     ArrayAdapter<String> adapter;
-
-
     private AlertDialog.Builder builder;
     private Socket socket;
     Handler updateConversationHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
         listview = (ListView) findViewById(R.id.output_view);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, outputList);
         listview.setAdapter(adapter);
         updateConversationHandler = new Handler();
         builder = new AlertDialog.Builder(this);
-
-
     }
 
     public void onClick(View v) {
