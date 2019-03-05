@@ -98,7 +98,15 @@ public class MainActivity extends AppCompatActivity {
         } catch(IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            Writer writer = new StringWriter();
+            e.printStackTrace(new PrintWriter(writer));
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.setTitle("Exception thrown");
+            alert.show();
         }
     }
 
