@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         listview = (ListView) findViewById(R.id.output_view);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, outputList);
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             try {
+                connectButton.setText("Connect");
                 endConnection();
             } catch(IOException e)
             {
