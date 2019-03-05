@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
     }
 
     private void startConnection(String ip, int port) {
