@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void getData(String ip, int port) throws IOException {
         socket = new Socket(ip, port);
+        System.out.println(ip);
+        System.out.println(port);
         ClientThread clientThread = new ClientThread(socket);
         new Thread(clientThread).start();
     }
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     String output = dataIn.readUTF();
                     updateConversationHandler.post(new OutputThread(output));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
         }
