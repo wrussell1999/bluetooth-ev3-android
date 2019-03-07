@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ListView listview;
+    MaterialButton connectButton;
     private ArrayList<String> outputList = new ArrayList<>();
     ArrayAdapter<String> adapter;
     private AlertDialog.Builder builder;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        connectButton = (MaterialButton) findViewById(R.id.connection_button);
         listview = (ListView) findViewById(R.id.output_view);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, outputList);
         listview.setAdapter(adapter);
@@ -42,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View v) {
         final TextInputEditText ipText = (TextInputEditText) findViewById(R.id.ip_box);
         final TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
-        MaterialButton connectButton = (MaterialButton) findViewById(R.id.connection_button);
         if (connectButton.getText().toString().equals("Connect")) {
             if (ipText.getText().toString().trim().length() <= 0) {
                 builder.setMessage("You need to enter an IP address").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -105,12 +106,14 @@ public class MainActivity extends AppCompatActivity {
         socket.close();
     }
 
+
     private void getData(String ip, int port) throws IOException {
         socket = new Socket(ip, port);
         System.out.println(ip);
         System.out.println(port);
         ClientThread clientThread = new ClientThread(socket);
         new Thread(clientThread).start();
+        connectButton.setText("Connect");
     }
 
     class ClientThread implements Runnable {
