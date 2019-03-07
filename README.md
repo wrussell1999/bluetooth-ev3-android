@@ -1,5 +1,7 @@
 # Bluetooth Android Client for connecting to EV3 robots 
 
+![Client app](screenshot.png)
+
 ## Usage
 
 **Make sure your device is not on WiFi or Mobile Data for best results.**
