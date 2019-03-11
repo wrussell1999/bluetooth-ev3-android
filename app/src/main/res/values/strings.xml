@@ -3,4 +3,5 @@
     <string name="connect_button_name">Connect</string>
     <string name="ip_label">IP Address</string>
     <string name="port_label">Port</string>
+    <string name="grid_label">Display Grid</string>
 </resources>
