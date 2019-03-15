@@ -3,6 +3,7 @@ package com.will_russell.ev3bluetoothclient;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -16,12 +17,11 @@ import android.app.AlertDialog;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
-    private ListView listview;
     MaterialButton connectButton;
-    private ArrayList<String> outputList = new ArrayList<>();
     ArrayAdapter<String> adapter;
     private AlertDialog.Builder builder;
     private Socket socket;
@@ -34,9 +34,8 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         connectButton = (MaterialButton) findViewById(R.id.connection_button);
-        listview = (ListView) findViewById(R.id.output_view);
+
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, outputList);
-        listview.setAdapter(adapter);
         updateConversationHandler = new Handler();
         builder = new AlertDialog.Builder(this);
     }
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class OutputThread implements Runnable {
-
         private String output;
 
         public OutputThread(String output) {
@@ -148,8 +146,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            outputList.add(output);
-            adapter.notifyDataSetChanged();
         }
     }
 }

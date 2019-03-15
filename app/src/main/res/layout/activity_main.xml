@@ -42,42 +42,19 @@
                     android:layout_height="wrap_content"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/connection_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/connect_button_name"
+                android:gravity="center"
                 android:layout_below="@id/port_layout"
-                android:layout_margin="8dp">
-                <Switch
-                    android:id="@+id/grid_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/grid_label"
-                    android:layout_weight="0.5"/>
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/connection_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/connect_button_name"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.5"
-                    android:onClick="onClick"/>
-            </LinearLayout>
+                android:onClick="onClick"/>
         </RelativeLayout>
-        <FrameLayout
-            android:id="@+id/frame"
+        <ImageView
+            android:id="@+id/image_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/input_layout">
-        </FrameLayout>
-        <!--
-        <ListView
-            android:id="@+id/output_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp">
-    	</ListView>
-    	-->
-        <!-- RecyclerView -->
+            android:layout_height="match_parent" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
