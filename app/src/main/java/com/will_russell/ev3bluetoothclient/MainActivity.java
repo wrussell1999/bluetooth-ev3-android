@@ -2,15 +2,12 @@ package com.will_russell.ev3bluetoothclient;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -18,8 +15,6 @@ import android.app.AlertDialog;
 
 import java.io.*;
 import java.net.*;
-import java.io.File;
-import java.io.FileOutputStream;
 
 import com.caverock.androidsvg.SVGImageView;
 import com.caverock.androidsvg.SVG;
@@ -40,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         connectButton = (MaterialButton) findViewById(R.id.connection_button);
         updateConversationHandler = new Handler();
         builder = new AlertDialog.Builder(this);
+        SVGImageView svgImageView = (SVGImageView) findViewById(R.id.maze_view);
+        svgImageView.setImageAsset("maze-empty.svg");
     }
 
     public void onClick(View v) {
@@ -157,20 +154,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        public void stringToSvg(String svgString) throws Exception {
-            File path = getApplicationContext().getFilesDir();
-            File file = new File(path, "maze.svg");
-            FileOutputStream outputStream = new FileOutputStream(file);
-            try {
-                outputStream.write(svgString.getBytes());
-                svgToImageView(file.getName());
-            } finally {
-                outputStream.close();
-            }
+        public void stringToSvg(String svgString) throws com.caverock.androidsvg.SVGParseException {
+            svgToImageView(SVG.getFromString(svgString));
         }
 
-        public void svgToImageView(String file) {
-            iv.setImageAsset(file);
+        public void svgToImageView(SVG svg) {
+            iv.setSVG(svg);
             iv.refreshDrawableState();
         }
     }

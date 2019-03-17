@@ -1,0 +1,47 @@
+<svg version="1.1" baseProfile="full" width="450" height="300" xmlns="http://www.w3.org/2000/svg">
+<line x1="50" y1="0" x2="50" y2="300" stroke="black" />
+<line x1="100" y1="0" x2="100" y2="300" stroke="black" />
+<line x1="150" y1="0" x2="150" y2="300" stroke="black" />
+<line x1="200" y1="0" x2="200" y2="300" stroke="black" />
+<line x1="250" y1="0" x2="250" y2="300" stroke="black" />
+<line x1="300" y1="0" x2="300" y2="300" stroke="black" />
+<line x1="350" y1="0" x2="350" y2="300" stroke="black" />
+<line x1="400" y1="0" x2="400" y2="300" stroke="black" />
+<line x1="0" y1="50" x2="450" y2="50" stroke="black" />
+<line x1="0" y1="100" x2="450" y2="100" stroke="black" />
+<line x1="0" y1="150" x2="450" y2="150" stroke="black" />
+<line x1="0" y1="200" x2="450" y2="200" stroke="black" />
+<line x1="0" y1="250" x2="450" y2="250" stroke="black" />
+<line x1="0" y1="0" x2="50" y2="0" stroke="black" stroke-width="5" />
+<line x1="0" y1="0" x2="0" y2="50" stroke="black" stroke-width="5" />
+<line x1="0" y1="50" x2="0" y2="100" stroke="black" stroke-width="5" />
+<line x1="0" y1="100" x2="0" y2="150" stroke="black" stroke-width="5" />
+<line x1="0" y1="150" x2="0" y2="200" stroke="black" stroke-width="5" />
+<line x1="0" y1="200" x2="0" y2="250" stroke="black" stroke-width="5" />
+<line x1="0" y1="250" x2="0" y2="300" stroke="black" stroke-width="5" />
+<line x1="50" y1="0" x2="100" y2="0" stroke="black" stroke-width="5" />
+<line x1="100" y1="0" x2="150" y2="0" stroke="black" stroke-width="5" />
+<line x1="150" y1="0" x2="200" y2="0" stroke="black" stroke-width="5" />
+<line x1="200" y1="0" x2="250" y2="0" stroke="black" stroke-width="5" />
+<line x1="250" y1="0" x2="300" y2="0" stroke="black" stroke-width="5" />
+<line x1="300" y1="0" x2="350" y2="0" stroke="black" stroke-width="5" />
+<line x1="350" y1="0" x2="400" y2="0" stroke="black" stroke-width="5" />
+<line x1="400" y1="0" x2="450" y2="0" stroke="black" stroke-width="5" />
+<line x1="0" y1="300" x2="50" y2="300" stroke="black" stroke-width="5" />
+<line x1="50" y1="300" x2="100" y2="300" stroke="black" stroke-width="5" />
+<line x1="100" y1="300" x2="150" y2="300" stroke="black" stroke-width="5" />
+<line x1="150" y1="300" x2="200" y2="300" stroke="black" stroke-width="5" />
+<line x1="200" y1="300" x2="250" y2="300" stroke="black" stroke-width="5" />
+<line x1="250" y1="300" x2="300" y2="300" stroke="black" stroke-width="5" />
+<line x1="300" y1="300" x2="350" y2="300" stroke="black" stroke-width="5" />
+<line x1="350" y1="300" x2="400" y2="300" stroke="black" stroke-width="5" />
+<line x1="400" y1="300" x2="450" y2="300" stroke="black" stroke-width="5" />
+<line x1="450" y1="0" x2="450" y2="50" stroke="black" stroke-width="5" />
+<line x1="450" y1="50" x2="450" y2="100" stroke="black" stroke-width="5" />
+<line x1="450" y1="100" x2="450" y2="150" stroke="black" stroke-width="5" />
+<line x1="450" y1="150" x2="450" y2="200" stroke="black" stroke-width="5" />
+<line x1="450" y1="200" x2="450" y2="250" stroke="black" stroke-width="5" />
+<line x1="450" y1="250" x2="450" y2="300" stroke="black" stroke-width="5" />
+<circle cx="25" cy="275" r="12" fill="black" />
+<line x1="25" y1="275" x2="25" y2="292" stroke="black" stroke-width="10" />
+</svg>
