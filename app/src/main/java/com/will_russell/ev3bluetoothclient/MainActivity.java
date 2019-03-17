@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View v) {
         final TextInputEditText ipText = (TextInputEditText) findViewById(R.id.ip_box);
         final TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
-        if (connectButton.getText().toString().equals("Connect")) {
+        if (connectButton.getText().toString().equals("Connect to EV3")) {
             if (ipText.getText().toString().trim().length() <= 0) {
                 builder.setMessage("You need to enter an IP address").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
         public void svgToImageView(SVG svg) {
             iv.setSVG(svg);
-            iv.refreshDrawableState();
         }
     }
 }
