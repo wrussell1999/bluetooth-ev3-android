@@ -91,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void getData(String ip, int port){
         try {
-            socket = new Socket(ip, port);
+            socket = new Socket();
+            socket.connect(new InetSocketAddress(ip, port), 5000);
             System.out.println(ip);
             System.out.println(port);
             ClientThread clientThread = new ClientThread(socket);
@@ -129,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog alert = builder.create();
             alert.setTitle("Exception thrown");
             alert.show();
-
         }
     }
 
