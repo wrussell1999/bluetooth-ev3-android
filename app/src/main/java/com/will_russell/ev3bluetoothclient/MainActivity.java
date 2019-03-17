@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     connectButton.setText("Connect to EV3");
                     status.setText("Status: Failed - Host Unknown");
-
                 }
             });
             AlertDialog alert = builder.create();
