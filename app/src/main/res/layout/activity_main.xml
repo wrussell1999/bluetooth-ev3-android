@@ -48,9 +48,17 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="@string/connect_button_name"
-                android:gravity="center"
                 android:layout_below="@id/port_layout"
                 android:onClick="onClick"/>
+            <TextView
+                android:id="@+id/status_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/connection_button"
+                android:text="@string/connection_text"
+                android:textColor="@color/colorText"
+                android:textSize="16dp"/>
         </RelativeLayout>
         <com.caverock.androidsvg.SVGImageView
             android:id="@+id/maze_view"

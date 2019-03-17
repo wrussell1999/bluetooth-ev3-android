@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import android.app.AlertDialog;
+import android.widget.TextView;
 
 import java.io.*;
 import java.net.*;
@@ -69,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             try {
-                connectButton.setText("Connect to EV3");
                 endConnection();
             } catch(IOException e)
             {
@@ -85,46 +85,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void endConnection() throws IOException {
+        connectButton.setText("Connect to EV3");
         socket.close();
     }
 
 
     private void getData(String ip, int port){
+        final TextView status = (TextView) findViewById(R.id.status_view);
         try {
             socket = new Socket();
-            socket.connect(new InetSocketAddress(ip, port), 5000);
-            System.out.println(ip);
-            System.out.println(port);
+            status.setText("Status: Connecting");
+            socket.connect(new InetSocketAddress(ip, port), 2000);
+            status.setText("Status: Connected");
             ClientThread clientThread = new ClientThread(socket);
             new Thread(clientThread).start();
-            connectButton.setText("Connect");
+            connectButton.setText("Connect to EV3");
         } catch (UnknownHostException e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
             builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    connectButton.setText("Connect to EV3");
+                    status.setText("Status: Failed - Host Unknown");
+
                 }
             });
             AlertDialog alert = builder.create();
             alert.setTitle("UnknownHostException thrown");
             alert.show();
-
         } catch (IOException e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
             builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    connectButton.setText("Connect to EV3");
+                    status.setText("Status: Failed - IOException");
                 }
             });
             AlertDialog alert = builder.create();
             alert.setTitle("IOException thrown");
             alert.show();
-
         } catch  (Exception e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
             builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    connectButton.setText("Connect to EV3");
+                    status.setText("Status: Failed - Exception");
                 }
             });
             AlertDialog alert = builder.create();
@@ -147,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
                     InputStream in = socket.getInputStream();
                     DataInputStream dataIn = new DataInputStream(in);
                     String output = dataIn.readUTF();
-                    System.out.println("Data received");
                     updateConversationHandler.post(new OutputThread(output));
                 } catch (IOException e) {
                     break;
@@ -168,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                System.out.println("UI");
                 stringToSvg(output);
             } catch (Exception e) {
                 e.printStackTrace();
