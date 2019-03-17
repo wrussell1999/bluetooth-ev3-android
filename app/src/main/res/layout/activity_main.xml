@@ -52,9 +52,11 @@
                 android:layout_below="@id/port_layout"
                 android:onClick="onClick"/>
         </RelativeLayout>
-        <ImageView
-            android:id="@+id/image_view"
+        <com.caverock.androidsvg.SVGImageView
+            android:id="@+id/maze_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:svg="@drawable/ic_launcher_background"
+            android:scaleType="fitXY" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

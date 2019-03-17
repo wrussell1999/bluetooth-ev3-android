@@ -2,6 +2,7 @@ package com.will_russell.ev3bluetoothclient;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -20,6 +21,9 @@ import java.net.*;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import com.caverock.androidsvg.SVGImageView;
+import com.caverock.androidsvg.SVG;
+
 public class MainActivity extends AppCompatActivity {
     MaterialButton connectButton;
     ArrayAdapter<String> adapter;
@@ -34,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         connectButton = (MaterialButton) findViewById(R.id.connection_button);
-
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, outputList);
         updateConversationHandler = new Handler();
         builder = new AlertDialog.Builder(this);
     }
@@ -65,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 alert.setTitle("No Port Number");
                 alert.show();
             } else {
-                connectButton.setText("Disconnect");
+                connectButton.setText("Disconnect from EV3");
                 startConnection(ipText.getText().toString().trim(), Integer.valueOf(portText.getText().toString().trim()));
             }
         } else {
             try {
-                connectButton.setText("Connect");
+                connectButton.setText("Connect to EV3");
                 endConnection();
             } catch(IOException e)
             {
@@ -139,13 +141,37 @@ public class MainActivity extends AppCompatActivity {
 
     class OutputThread implements Runnable {
         private String output;
+        private SVGImageView iv;
 
         public OutputThread(String output) {
             this.output = output;
+            iv = (SVGImageView) findViewById(R.id.maze_view);
         }
 
         @Override
         public void run() {
+            try {
+                stringToSvg(output);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void stringToSvg(String svgString) throws Exception {
+            File path = getApplicationContext().getFilesDir();
+            File file = new File(path, "maze.svg");
+            FileOutputStream outputStream = new FileOutputStream(file);
+            try {
+                outputStream.write(svgString.getBytes());
+                svgToImageView(file.getName());
+            } finally {
+                outputStream.close();
+            }
+        }
+
+        public void svgToImageView(String file) {
+            iv.setImageAsset(file);
+            iv.refreshDrawableState();
         }
     }
 }
