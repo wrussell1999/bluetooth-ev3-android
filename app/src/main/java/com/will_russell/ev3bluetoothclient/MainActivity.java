@@ -81,13 +81,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startConnection(String ip, int port) {
+        getData(ip, port);
+    }
+
+    private void endConnection() throws IOException {
+        socket.close();
+    }
+
+
+    private void getData(String ip, int port){
         try {
-            getData(ip, port);
+            socket = new Socket(ip, port);
+            System.out.println(ip);
+            System.out.println(port);
+            ClientThread clientThread = new ClientThread(socket);
+            new Thread(clientThread).start();
+            connectButton.setText("Connect");
         } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch(IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+            Writer writer = new StringWriter();
+            e.printStackTrace(new PrintWriter(writer));
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.setTitle("UnknownHostException thrown");
+            alert.show();
+
+        } catch (IOException e) {
+            Writer writer = new StringWriter();
+            e.printStackTrace(new PrintWriter(writer));
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.setTitle("IOException thrown");
+            alert.show();
+
+        } catch  (Exception e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
             builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -97,21 +129,8 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog alert = builder.create();
             alert.setTitle("Exception thrown");
             alert.show();
+
         }
-    }
-
-    private void endConnection() throws IOException {
-        socket.close();
-    }
-
-
-    private void getData(String ip, int port) throws IOException {
-        socket = new Socket(ip, port);
-        System.out.println(ip);
-        System.out.println(port);
-        ClientThread clientThread = new ClientThread(socket);
-        new Thread(clientThread).start();
-        connectButton.setText("Connect");
     }
 
     class ClientThread implements Runnable {
@@ -128,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     InputStream in = socket.getInputStream();
                     DataInputStream dataIn = new DataInputStream(in);
                     String output = dataIn.readUTF();
+                    System.out.println("Data received");
                     updateConversationHandler.post(new OutputThread(output));
                 } catch (IOException e) {
                     break;
@@ -148,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
+                System.out.println("UI");
                 stringToSvg(output);
             } catch (Exception e) {
                 e.printStackTrace();
