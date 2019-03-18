@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">EV3 Bluetooth Client</string>
     <string name="connect_button_name">Connect to EV3</string>
+    <string name="disconnect_button_name">Disconnect from EV3</string>
     <string name="ip_label">IP Address</string>
     <string name="port_label">Port</string>
     <string name="grid_label">Display Grid</string>
-    <string name="connection_text">Status: Disconnected</string>
+    <string name="connection_text_disconnected">Status: Disconnected</string>
+    <string name="connection_text_connected">Status: Connected to EV3</string>
+    <string name="connection_text_fail_io">Status: Failed - IOException</string>
+    <string name="connection_text_fail_host">Status: Failed - Host Unknown</string>
+    <string name="connection_text_fail">Status: Failed - Exception thrown</string>
 </resources>
