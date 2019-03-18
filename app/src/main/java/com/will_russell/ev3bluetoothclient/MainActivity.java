@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if ((output.length() > 4) && (output.substring(0, 4).equals("<svg"))) {
                     SVG svg = SVG.getFromString(output);
+                    SVGFragment.mazeList.add(svg);
                     SVGFragment.svgImageView.setSVG(svg);
                 } else {
                     DebugFragment.outputList.add(output);
