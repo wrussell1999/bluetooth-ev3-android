@@ -2,11 +2,13 @@ package com.will_russell.ev3bluetoothclient;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 
 import com.google.android.material.button.MaterialButton;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder builder;
     private Socket socket;
     Handler updateConversationHandler;
+    TextView status;
+    SVGImageView svgImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +38,10 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         connectButton = (MaterialButton) findViewById(R.id.connection_button);
+        status = (TextView) findViewById(R.id.status_view);
         updateConversationHandler = new Handler();
         builder = new AlertDialog.Builder(this);
-        SVGImageView svgImageView = (SVGImageView) findViewById(R.id.maze_view);
+        svgImageView = (SVGImageView) findViewById(R.id.maze_view);
         svgImageView.setImageAsset("maze-empty.svg");
     }
 
@@ -91,15 +96,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getData(String ip, int port){
-        final TextView status = (TextView) findViewById(R.id.status_view);
         try {
-            socket = new Socket();
             status.setText(R.string.connection_text_connecting);
+            socket = new Socket();
             socket.connect(new InetSocketAddress(ip, port), 2000);
             status.setText(R.string.connection_text_connected);
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
             ClientThread clientThread = new ClientThread(socket);
             new Thread(clientThread).start();
             connectButton.setText(R.string.connect_button_name);
+            status.setText(R.string.connection_text_disconnected);
         } catch (UnknownHostException e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
@@ -148,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
+            svgImageView.setImageAsset("maze-empty.svg");
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     InputStream in = socket.getInputStream();
@@ -195,19 +205,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                stringToSvg(output);
+                SVG svg = SVG.getFromString(output);
+                iv.setSVG(svg);
+            } catch (com.caverock.androidsvg.SVGParseException e) {
+                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        public void stringToSvg(String svgString) throws com.caverock.androidsvg.SVGParseException {
-            System.out.println("SVG");
-            svgToImageView(SVG.getFromString(svgString));
-        }
-
-        public void svgToImageView(SVG svg) {
-            iv.setSVG(svg);
         }
     }
 }
