@@ -45,27 +45,27 @@ public class MainActivity extends AppCompatActivity {
         final TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
         if (connectButton.getText().toString().equals("Connect to EV3")) {
             if (ipText.getText().toString().trim().length() <= 0) {
-                builder.setMessage("You need to enter an IP address").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setMessage(R.id.no_ip_message).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         ipText.setFocusableInTouchMode(true);
                         ipText.requestFocus();
                     }
                 });
                 AlertDialog alert = builder.create();
-                alert.setTitle("No IP Address");
+                alert.setTitle(R.id.no_ip_title);
                 alert.show();
             } else if (portText.getText().toString().trim().length() <= 0) {
-                builder.setMessage("You need to enter a Port number").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setMessage(R.id.no_port_message).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         portText.setFocusableInTouchMode(true);
                         portText.requestFocus();
                     }
                 });
                 AlertDialog alert = builder.create();
-                alert.setTitle("No Port Number");
+                alert.setTitle(R.id.no_port_title);
                 alert.show();
             } else {
-                connectButton.setText("Disconnect from EV3");
+                connectButton.setText(R.id.disconnect_button_name);
                 startConnection(ipText.getText().toString().trim(), Integer.valueOf(portText.getText().toString().trim()));
             }
         } else {
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void endConnection() throws IOException {
-        connectButton.setText("Connect to EV3");
+        connectButton.setText(R.id.connect_button_name);
         socket.close();
     }
 
@@ -94,47 +94,47 @@ public class MainActivity extends AppCompatActivity {
         final TextView status = (TextView) findViewById(R.id.status_view);
         try {
             socket = new Socket();
-            status.setText("Status: Connecting");
+            status.setText(R.id.connection_text_connecting);
             socket.connect(new InetSocketAddress(ip, port), 2000);
-            status.setText("Status: Connected");
+            status.setText(R.id.connection_text_connected);
             ClientThread clientThread = new ClientThread(socket);
             new Thread(clientThread).start();
-            connectButton.setText("Connect to EV3");
+            connectButton.setText(R.id.connect_button_name);
         } catch (UnknownHostException e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
-            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    connectButton.setText("Connect to EV3");
-                    status.setText("Status: Failed - Host Unknown");
+                    connectButton.setText(R.id.connect_button_name);
+                    status.setText(R.id.connection_text_host);
                 }
             });
             AlertDialog alert = builder.create();
-            alert.setTitle("UnknownHostException thrown");
+            alert.setTitle(R.id.connection_title_fail_host);
             alert.show();
         } catch (IOException e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
-            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    connectButton.setText("Connect to EV3");
-                    status.setText("Status: Failed - IOException");
+                    connectButton.setText(R.id.connect_button_name);
+                    status.setText(R.id.connection_text_fail_io);
                 }
             });
             AlertDialog alert = builder.create();
-            alert.setTitle("IOException thrown");
+            alert.setTitle(R.id.connection_title_fail_io);
             alert.show();
         } catch  (Exception e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
-            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    connectButton.setText("Connect to EV3");
-                    status.setText("Status: Failed - Exception");
+                    connectButton.setText(R.id.connect_button_name);
+                    status.setText(R.id.connection_text_fail);
                 }
             });
             AlertDialog alert = builder.create();
-            alert.setTitle("Exception thrown");
+            alert.setTitle(R.id.);
             alert.show();
         }
     }
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     AlertDialog alert = builder.create();
-                    alert.setTitle("Server connection closed");
+                    alert.setTitle("EV3 connection closed");
                     alert.show();
                     break;
                 }
