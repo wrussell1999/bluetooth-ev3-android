@@ -19,4 +19,6 @@
     <string name="no_port_title">No Port Number</string>
     <string name="no_port_message">You need to enter a Port number</string>
     <string name="ok_button">OK</string>
+    <string name="debug_default">Debug view</string>
+    <string name="switch_hint">Toggle Mode</string>
 </resources>

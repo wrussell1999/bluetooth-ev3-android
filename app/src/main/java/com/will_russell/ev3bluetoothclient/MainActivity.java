@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     private AlertDialog.Builder builder;
     private Socket socket;
-    Handler updateConversationHandler;
+    Handler mazeHandler;
+    Handler debugHanlder;
     TextView status;
     SVGImageView svgImageView;
 
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         connectButton = (MaterialButton) findViewById(R.id.connection_button);
         status = (TextView) findViewById(R.id.status_view);
-        updateConversationHandler = new Handler();
+        mazeHandler = new Handler();
+        debugHanlder = new Handler();
         builder = new AlertDialog.Builder(this);
         svgImageView = (SVGImageView) findViewById(R.id.maze_view);
         svgImageView.setImageAsset("maze-empty.svg");
@@ -107,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
                     InputMethodManager.HIDE_NOT_ALWAYS);
             ClientThread clientThread = new ClientThread(socket);
             new Thread(clientThread).start();
-            connectButton.setText(R.string.connect_button_name);
-            status.setText(R.string.connection_text_disconnected);
         } catch (UnknownHostException e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
@@ -148,6 +148,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void disconnected() {
+        connectButton.setText(R.string.connect_button_name);
+        status.setText(R.string.connection_text_disconnected);
+    }
+
     class ClientThread implements Runnable {
         private Socket socket;
 
@@ -164,40 +169,22 @@ public class MainActivity extends AppCompatActivity {
                     DataInputStream dataIn = new DataInputStream(in);
                     String output = dataIn.readUTF();
                     if ((output.length() > 4) && (output.substring(0, 4).equals("<svg"))) {
-                        updateConversationHandler.post(new OutputThread(output));
+                        mazeHandler.post(new MazeThread(output));
                     } else {
-                        /*
-                        connectionBuilder.setMessage("The grid wasn't sent. Instead, the following was sent: " + output).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        });
-                        AlertDialog alert = builder.create();
-                        alert.setTitle("Grid not sent");
-                        alert.show();
-                        */
-                        System.out.println("Real output: " + output);
+                        debugHanlder.post(new DebugThread(output));
                     }
                 } catch (IOException e) {
-                    /*
-                    builder.setMessage("The EV3 connection has been lost. Please restart the EV3 server to connect.").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    });
-                    AlertDialog alert = builder.create();
-                    alert.setTitle("EV3 connection closed");
-                    alert.show();
-                    */
                     break;
                 }
             }
         }
     }
 
-    class OutputThread implements Runnable {
+    class MazeThread implements Runnable {
         private String output;
         private SVGImageView iv;
 
-        public OutputThread(String output) {
+        public MazeThread(String output) {
             this.output = output;
             iv = (SVGImageView) findViewById(R.id.maze_view);
         }
@@ -214,4 +201,41 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    class DebugThread implements Runnable {
+        private String debugString;
+        private TextView debugTv;
+
+        public DebugThread(String debugString) {
+            this.debugString = debugString;
+            debugTv = (TextView) findViewById(R.id.debug_view);
+        }
+
+        @Override
+        public void run() {
+            debugTv.setText(debugString);
+        }
+
+    }
+
+    class FinishedThread implements Runnable {
+        private AlertDialog alertDialog;
+
+        public FinishedThread(AlertDialog alertDialog) {
+            this.alertDialog = alertDialog;
+        }
+
+        @Override
+        public void run() {
+            builder.setMessage("The EV3 connection has been lost. Please restart the EV3 server to connect.").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.setTitle("EV3 connection closed");
+            alert.show();
+        }
+    }
+
+
 }
