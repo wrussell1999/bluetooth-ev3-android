@@ -17,6 +17,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import android.app.AlertDialog;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.*;
@@ -32,9 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private Socket socket;
     Handler mazeHandler;
     Handler debugHanlder;
+    Handler finishedHanlder;
     TextView status;
     CheckBox toggle;
-    SVGImageView svgImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
         mazeHandler = new Handler();
         debugHanlder = new Handler();
+        finishedHanlder = new Handler();
 
         builder = new AlertDialog.Builder(this);
 
-        svgImageView = (SVGImageView) findViewById(R.id.maze_view);
-        svgImageView.setImageAsset("maze-empty.svg");
-
         toggle.setOnClickListener(new View.OnClickListener() {
-            Fragment selectedFragment = null;
+            Fragment selectedFragment = SVGFragment.newInstance();
             @Override
             public void onClick(View v) {
                 if (toggle.isChecked()) {
@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 transaction.commit();
             }
         });
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, SVGFragment.newInstance());
+        transaction.commit();
     }
 
     public void onClick(View v) {
@@ -188,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            svgImageView.setImageAsset("maze-empty.svg");
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     InputStream in = socket.getInputStream();
@@ -200,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                         debugHanlder.post(new DebugThread(output));
                     }
                 } catch (IOException e) {
+                    //finishedHanlder.post(new FinishedThread());
                     break;
                 }
             }
@@ -208,18 +211,17 @@ public class MainActivity extends AppCompatActivity {
 
     class MazeThread implements Runnable {
         private String output;
-        private SVGImageView iv;
 
         public MazeThread(String output) {
             this.output = output;
-            iv = (SVGImageView) findViewById(R.id.maze_view);
         }
 
         @Override
         public void run() {
             try {
                 SVG svg = SVG.getFromString(output);
-                iv.setSVG(svg);
+                System.out.println("SVG");
+                SVGFragment.svgImageView.setSVG(svg);
             } catch (com.caverock.androidsvg.SVGParseException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -237,28 +239,29 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
+            DebugFragment.outputList.add(debugString);
+            DebugFragment.adapter.notifyDataSetChanged();
+            DebugFragment.debugListView.setSelection(DebugFragment.adapter.getCount() - 1);
         }
-
     }
 
     class FinishedThread implements Runnable {
         private AlertDialog alertDialog;
+        private AlertDialog.Builder finishedBuilder;
 
-        public FinishedThread(AlertDialog alertDialog) {
-            this.alertDialog = alertDialog;
+        public FinishedThread() {
+            finishedBuilder = new AlertDialog.Builder(getApplicationContext());
         }
 
         @Override
         public void run() {
-            builder.setMessage("The EV3 connection has been lost. Please restart the EV3 server to connect.").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            finishedBuilder.setMessage("The EV3 connection has been lost. Please restart the EV3 server to connect.").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                 }
             });
-            AlertDialog alert = builder.create();
+            AlertDialog alert = finishedBuilder.create();
             alert.setTitle("EV3 connection closed");
             alert.show();
         }
     }
-
-
 }
