@@ -12,7 +12,7 @@
     <string name="connection_text_fail_host">Status: Failed - Host Unknown</string>
     <string name="connection_text_fail">Status: Failed - Exception thrown</string>
     <string name="connection_title_fail_io">IOException thrown</string>
-    <stirng name="connection_title_fail_host">UnknownHostException thrown</string>
+    <string name="connection_title_fail_host">UnknownHostException thrown</string>
     <string name="connection_title_fail">Exception thrown</string>
     <string name="no_ip_title">No IP Address</string>
     <string name="no_ip_message">You need to enter an IP address</string>

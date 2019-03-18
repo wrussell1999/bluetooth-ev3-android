@@ -45,27 +45,27 @@ public class MainActivity extends AppCompatActivity {
         final TextInputEditText portText = (TextInputEditText) findViewById(R.id.port_box);
         if (connectButton.getText().toString().equals("Connect to EV3")) {
             if (ipText.getText().toString().trim().length() <= 0) {
-                builder.setMessage(R.id.no_ip_message).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
+                builder.setMessage(R.string.no_ip_message).setCancelable(false).setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         ipText.setFocusableInTouchMode(true);
                         ipText.requestFocus();
                     }
                 });
                 AlertDialog alert = builder.create();
-                alert.setTitle(R.id.no_ip_title);
+                alert.setTitle(R.string.no_ip_title);
                 alert.show();
             } else if (portText.getText().toString().trim().length() <= 0) {
-                builder.setMessage(R.id.no_port_message).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
+                builder.setMessage(R.string.no_port_message).setCancelable(false).setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         portText.setFocusableInTouchMode(true);
                         portText.requestFocus();
                     }
                 });
                 AlertDialog alert = builder.create();
-                alert.setTitle(R.id.no_port_title);
+                alert.setTitle(R.string.no_port_title);
                 alert.show();
             } else {
-                connectButton.setText(R.id.disconnect_button_name);
+                connectButton.setText(R.string.disconnect_button_name);
                 startConnection(ipText.getText().toString().trim(), Integer.valueOf(portText.getText().toString().trim()));
             }
         } else {
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void endConnection() throws IOException {
-        connectButton.setText(R.id.connect_button_name);
+        connectButton.setText(R.string.connect_button_name);
         socket.close();
     }
 
@@ -94,47 +94,47 @@ public class MainActivity extends AppCompatActivity {
         final TextView status = (TextView) findViewById(R.id.status_view);
         try {
             socket = new Socket();
-            status.setText(R.id.connection_text_connecting);
+            status.setText(R.string.connection_text_connecting);
             socket.connect(new InetSocketAddress(ip, port), 2000);
-            status.setText(R.id.connection_text_connected);
+            status.setText(R.string.connection_text_connected);
             ClientThread clientThread = new ClientThread(socket);
             new Thread(clientThread).start();
-            connectButton.setText(R.id.connect_button_name);
+            connectButton.setText(R.string.connect_button_name);
         } catch (UnknownHostException e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
-            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    connectButton.setText(R.id.connect_button_name);
-                    status.setText(R.id.connection_text_host);
+                    connectButton.setText(R.string.connect_button_name);
+                    status.setText(R.string.connection_text_fail_host);
                 }
             });
             AlertDialog alert = builder.create();
-            alert.setTitle(R.id.connection_title_fail_host);
+            alert.setTitle(R.string.connection_title_fail_host);
             alert.show();
         } catch (IOException e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
-            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    connectButton.setText(R.id.connect_button_name);
-                    status.setText(R.id.connection_text_fail_io);
+                    connectButton.setText(R.string.connect_button_name);
+                    status.setText(R.string.connection_text_fail_io);
                 }
             });
             AlertDialog alert = builder.create();
-            alert.setTitle(R.id.connection_title_fail_io);
+            alert.setTitle(R.string.connection_title_fail_io);
             alert.show();
         } catch  (Exception e) {
             Writer writer = new StringWriter();
             e.printStackTrace(new PrintWriter(writer));
-            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.id.ok_button, new DialogInterface.OnClickListener() {
+            builder.setMessage(writer.toString()).setCancelable(false).setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    connectButton.setText(R.id.connect_button_name);
-                    status.setText(R.id.connection_text_fail);
+                    connectButton.setText(R.string.connect_button_name);
+                    status.setText(R.string.connection_text_fail);
                 }
             });
             AlertDialog alert = builder.create();
-            alert.setTitle(R.id.);
+            alert.setTitle(R.string.connection_title_fail);
             alert.show();
         }
     }
@@ -153,18 +153,22 @@ public class MainActivity extends AppCompatActivity {
                     InputStream in = socket.getInputStream();
                     DataInputStream dataIn = new DataInputStream(in);
                     String output = dataIn.readUTF();
-                    if ((output.length > 4) && (output.substring(0, 4).equals("<svg")) {
+                    if ((output.length() > 4) && (output.substring(0, 4).equals("<svg"))) {
                         updateConversationHandler.post(new OutputThread(output));
                     } else {
-                        builder.setMessage("The grid wasn't sent. Instead, the following was sent: " + output).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        /*
+                        connectionBuilder.setMessage("The grid wasn't sent. Instead, the following was sent: " + output).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                             }
                         });
                         AlertDialog alert = builder.create();
                         alert.setTitle("Grid not sent");
                         alert.show();
+                        */
+                        System.out.println("Real output: " + output);
                     }
                 } catch (IOException e) {
+                    /*
                     builder.setMessage("The EV3 connection has been lost. Please restart the EV3 server to connect.").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
@@ -172,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog alert = builder.create();
                     alert.setTitle("EV3 connection closed");
                     alert.show();
+                    */
                     break;
                 }
             }
@@ -197,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void stringToSvg(String svgString) throws com.caverock.androidsvg.SVGParseException {
+            System.out.println("SVG");
             svgToImageView(SVG.getFromString(svgString));
         }
 
