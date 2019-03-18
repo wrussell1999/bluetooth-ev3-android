@@ -1,6 +1,8 @@
 package com.will_russell.ev3bluetoothclient;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import android.app.AlertDialog;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.io.*;
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Handler mazeHandler;
     Handler debugHanlder;
     TextView status;
+    CheckBox toggle;
     SVGImageView svgImageView;
 
     @Override
@@ -38,13 +42,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         connectButton = (MaterialButton) findViewById(R.id.connection_button);
         status = (TextView) findViewById(R.id.status_view);
+        toggle = (CheckBox) findViewById(R.id.frame_check);
+
         mazeHandler = new Handler();
         debugHanlder = new Handler();
+
         builder = new AlertDialog.Builder(this);
+
         svgImageView = (SVGImageView) findViewById(R.id.maze_view);
         svgImageView.setImageAsset("maze-empty.svg");
+
+        toggle.setOnClickListener(new View.OnClickListener() {
+            Fragment selectedFragment = null;
+            @Override
+            public void onClick(View v) {
+                if (toggle.isChecked()) {
+                    selectedFragment = DebugFragment.newInstance();
+                } else {
+                    selectedFragment = SVGFragment.newInstance();
+                }
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_layout, selectedFragment);
+                transaction.commit();
+            }
+        });
     }
 
     public void onClick(View v) {
@@ -103,10 +127,12 @@ public class MainActivity extends AppCompatActivity {
             socket = new Socket();
             socket.connect(new InetSocketAddress(ip, port), 2000);
             status.setText(R.string.connection_text_connected);
+
             InputMethodManager inputManager = (InputMethodManager)
                     getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
+
             ClientThread clientThread = new ClientThread(socket);
             new Thread(clientThread).start();
         } catch (UnknownHostException e) {
@@ -204,16 +230,13 @@ public class MainActivity extends AppCompatActivity {
 
     class DebugThread implements Runnable {
         private String debugString;
-        private TextView debugTv;
 
         public DebugThread(String debugString) {
             this.debugString = debugString;
-            debugTv = (TextView) findViewById(R.id.debug_view);
         }
 
         @Override
         public void run() {
-            debugTv.setText(debugString);
         }
 
     }

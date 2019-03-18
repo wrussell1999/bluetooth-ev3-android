@@ -76,7 +76,7 @@
                 android:textSize="16dp"/>
         </RelativeLayout>
         <FrameLayout
-            android:id="@+id/framelayout"
+            android:id="@+id/frame_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </FrameLayout>
