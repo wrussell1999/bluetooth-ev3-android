@@ -153,7 +153,17 @@ public class MainActivity extends AppCompatActivity {
                     InputStream in = socket.getInputStream();
                     DataInputStream dataIn = new DataInputStream(in);
                     String output = dataIn.readUTF();
-                    updateConversationHandler.post(new OutputThread(output));
+                    if ((output.length > 4) && (output.substring(0, 4).equals("<svg")) {
+                        updateConversationHandler.post(new OutputThread(output));
+                    } else {
+                        builder.setMessage("The grid wasn't sent. Instead, the following was sent: " + output).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.setTitle("Grid not sent");
+                        alert.show();
+                    }
                 } catch (IOException e) {
                     break;
                 }
