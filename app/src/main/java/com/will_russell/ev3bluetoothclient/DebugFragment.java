@@ -11,7 +11,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class DebugFragment extends Fragment {
-
     protected static ListView debugListView;
     protected static ArrayAdapter<String> adapter;
     protected static ArrayList<String> outputList = new ArrayList<>();

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.caverock.androidsvg.SVGImageView;
 
 public class SVGFragment extends Fragment {
-    protected  static SVGImageView svgImageView;
+    protected static SVGImageView svgImageView;
 
     public static SVGFragment newInstance() {
         SVGFragment svgFragment = new SVGFragment();
@@ -20,7 +20,6 @@ public class SVGFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.svg_fragment, container, false);
         svgImageView = (SVGImageView) view.findViewById(R.id.maze_view);
-        svgImageView.setImageAsset("maze-empty.svg");
         return view;
     }
 }

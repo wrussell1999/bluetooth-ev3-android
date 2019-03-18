@@ -22,18 +22,16 @@ import android.widget.TextView;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 import com.caverock.androidsvg.SVGImageView;
 import com.caverock.androidsvg.SVG;
 
 public class MainActivity extends AppCompatActivity {
     MaterialButton connectButton;
-    ArrayAdapter<String> adapter;
     private AlertDialog.Builder builder;
     private Socket socket;
-    Handler mazeHandler;
-    Handler debugHanlder;
-    Handler finishedHanlder;
+    Handler uiHandler;
     TextView status;
     CheckBox toggle;
 
@@ -49,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
         status = (TextView) findViewById(R.id.status_view);
         toggle = (CheckBox) findViewById(R.id.frame_check);
 
-        mazeHandler = new Handler();
-        debugHanlder = new Handler();
-        finishedHanlder = new Handler();
+        uiHandler = new Handler();
 
         builder = new AlertDialog.Builder(this);
 
@@ -100,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 alert.show();
             } else {
                 connectButton.setText(R.string.disconnect_button_name);
-                startConnection(ipText.getText().toString().trim(), Integer.valueOf(portText.getText().toString().trim()));
+                getData(ipText.getText().toString().trim(), Integer.valueOf(portText.getText().toString().trim()));
             }
         } else {
             try {
@@ -112,10 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void startConnection(String ip, int port) {
-        getData(ip, port);
     }
 
     private void endConnection() throws IOException {
@@ -177,11 +169,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void disconnected() {
-        connectButton.setText(R.string.connect_button_name);
-        status.setText(R.string.connection_text_disconnected);
-    }
-
     class ClientThread implements Runnable {
         private Socket socket;
 
@@ -196,72 +183,37 @@ public class MainActivity extends AppCompatActivity {
                     InputStream in = socket.getInputStream();
                     DataInputStream dataIn = new DataInputStream(in);
                     String output = dataIn.readUTF();
-                    if ((output.length() > 4) && (output.substring(0, 4).equals("<svg"))) {
-                        mazeHandler.post(new MazeThread(output));
-                    } else {
-                        debugHanlder.post(new DebugThread(output));
-                    }
+                    uiHandler.post(new UIThread(output));
                 } catch (IOException e) {
-                    //finishedHanlder.post(new FinishedThread());
                     break;
                 }
             }
         }
     }
 
-    class MazeThread implements Runnable {
+    class UIThread implements Runnable {
         private String output;
 
-        public MazeThread(String output) {
+        public UIThread(String output) {
             this.output = output;
         }
 
         @Override
         public void run() {
             try {
-                SVG svg = SVG.getFromString(output);
-                System.out.println("SVG");
-                SVGFragment.svgImageView.setSVG(svg);
+                if ((output.length() > 4) && (output.substring(0, 4).equals("<svg"))) {
+                    SVG svg = SVG.getFromString(output);
+                    SVGFragment.svgImageView.setSVG(svg);
+                } else {
+                    DebugFragment.outputList.add(output);
+                    DebugFragment.adapter.notifyDataSetChanged();
+                    DebugFragment.debugListView.setSelection(DebugFragment.adapter.getCount() - 1);
+                }
             } catch (com.caverock.androidsvg.SVGParseException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    class DebugThread implements Runnable {
-        private String debugString;
-
-        public DebugThread(String debugString) {
-            this.debugString = debugString;
-        }
-
-        @Override
-        public void run() {
-            DebugFragment.outputList.add(debugString);
-            DebugFragment.adapter.notifyDataSetChanged();
-            DebugFragment.debugListView.setSelection(DebugFragment.adapter.getCount() - 1);
-        }
-    }
-
-    class FinishedThread implements Runnable {
-        private AlertDialog alertDialog;
-        private AlertDialog.Builder finishedBuilder;
-
-        public FinishedThread() {
-            finishedBuilder = new AlertDialog.Builder(getApplicationContext());
-        }
-
-        @Override
-        public void run() {
-            finishedBuilder.setMessage("The EV3 connection has been lost. Please restart the EV3 server to connect.").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                }
-            });
-            AlertDialog alert = finishedBuilder.create();
-            alert.setTitle("EV3 connection closed");
-            alert.show();
         }
     }
 }
