@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/connection_button"
-                android:text="@string/connection_text"
+                android:text="@string/connection_text_disconnected"
                 android:textColor="@color/colorText"
                 android:textSize="16dp"/>
         </RelativeLayout>
