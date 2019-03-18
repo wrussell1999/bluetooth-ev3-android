@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         socket.close();
     }
 
-
     private void getData(String ip, int port){
         try {
             status.setText(R.string.connection_text_connecting);
