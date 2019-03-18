@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            while(!Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
                     InputStream in = socket.getInputStream();
                     DataInputStream dataIn = new DataInputStream(in);
@@ -165,6 +165,13 @@ public class MainActivity extends AppCompatActivity {
                         alert.show();
                     }
                 } catch (IOException e) {
+                    builder.setMessage("The EV3 connection has been lost. Please restart the EV3 server to connect.").setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.setTitle("Server connection closed");
+                    alert.show();
                     break;
                 }
             }
