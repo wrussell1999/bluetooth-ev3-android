@@ -6,8 +6,17 @@
     <string name="port_label">Port</string>
     <string name="grid_label">Display Grid</string>
     <string name="connection_text_disconnected">Status: Disconnected</string>
+    <string name="connection_text_connecting">Status: Connecting...</string>
     <string name="connection_text_connected">Status: Connected to EV3</string>
     <string name="connection_text_fail_io">Status: Failed - IOException</string>
     <string name="connection_text_fail_host">Status: Failed - Host Unknown</string>
     <string name="connection_text_fail">Status: Failed - Exception thrown</string>
+    <string name="connection_title_fail_io">IOException thrown</string>
+    <stirng name="connection_title_fail_host">UnknownHostException thrown</string>
+    <string name="connection_title_fail">Exception thrown</string>
+    <string name="no_ip_title">No IP Address</string>
+    <string name="no_ip_message">You need to enter an IP address</string>
+    <string name="no_port_title">No Port Number</string>
+    <string name="no_port_message">You need to enter a Port number</string>
+    <string name="ok_button">OK</string>
 </resources>
