@@ -4,6 +4,8 @@
 
 ## Usage
 
+The EV3 sends the app an SVG as a string. The app creates an SVG using the caverock SVG library, and displays it in an SVGImageView.
+
 **Make sure your device is not on WiFi or Mobile Data for best results.**
 
 Before you use the app, you will need a ServerSocket running on the EV3 waiting for the client to connect. 
