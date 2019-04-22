@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="16dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/made_by"
+        android:textSize="22dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="@dimen/about_button_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:autoLink="web"
+        android:clickable="true"
+        android:linksClickable="true"
+        android:onClick="gotoGitHub"
+        android:text="@string/github"
+        app:icon="@drawable/github_logo"
+        app:iconSize="24dp"
+        app:cornerRadius="6dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="@dimen/about_button_width"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:clickable="true"
+        android:linksClickable="true"
+        android:onClick="gotoTwitter"
+        android:text="@string/twitter"
+        app:icon="@drawable/twitter_logo"
+        app:iconSize="24dp"
+        app:cornerRadius="6dp"/>
+
+</LinearLayout>
