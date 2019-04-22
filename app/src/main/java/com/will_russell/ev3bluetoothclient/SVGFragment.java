@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGImageView;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class SVGFragment extends Fragment {
@@ -26,7 +24,13 @@ public class SVGFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.svg_fragment, container, false);
-        svgImageView = (SVGImageView) view.findViewById(R.id.maze_view);
+        svgImageView = view.findViewById(R.id.maze_view);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        svgImageView.setSVG(mazeList.get(mazeList.size() - 1));
     }
 }
